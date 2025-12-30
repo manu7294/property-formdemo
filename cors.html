@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Property Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 1200px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        input {
+            padding: 8px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background: #fff;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 6px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Property Registration Entry Form</h2>
+
+<form id="dataForm">
+    <div class="grid">
+        <input placeholder="State" id="state" required>
+        <input placeholder="District" id="district">
+        <input placeholder="Document" id="document">
+        <input placeholder="Document Number" id="docNumber">
+
+        <input placeholder="Docs Presentation" id="docsPresentation">
+        <input placeholder="Executer Name" id="executerName">
+        <input placeholder="Favor of Name" id="favorName">
+        <input placeholder="SRO Name" id="sroName">
+
+        <input placeholder="Client Name / Source" id="clientName">
+        <input placeholder="Drafted and Executed" id="draftedExecuted">
+        <input placeholder="Property Address" id="propertyAddress">
+        <input placeholder="Consideration Price" id="considerationPrice">
+
+        <input placeholder="SI / CSI" id="siCsi">
+        <input placeholder="Registration" id="registration">
+        <input placeholder="Stamp Duty" id="stampDuty">
+        <input placeholder="Society Duty" id="societyDuty">
+
+        <input placeholder="Total" id="total">
+        <input placeholder="Commission Of" id="commission">
+        <input placeholder="Remaining Amount" id="remaining">
+        <input placeholder="SRO Expenses" id="sroExpenses">
+
+        <input placeholder="Final Amount" id="finalAmount">
+        <input placeholder="Amount Submission" id="amountSubmission">
+        <input placeholder="SFDC" id="sfdc">
+    </div>
+
+    <div class="actions">
+        <button type="submit">Submit Entry</button>
+        <button type="button" onclick="downloadExcel()">Download Excel</button>
+    </div>
+</form>
+
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>State</th>
+            <th>District</th>
+            <th>Document</th>
+            <th>Doc No</th>
+            <th>Docs Presentation</th>
+            <th>Executer</th>
+            <th>Favor Of</th>
+            <th>SRO</th>
+            <th>Client</th>
+            <th>Drafted</th>
+            <th>Property Address</th>
+            <th>Consideration</th>
+            <th>SI/CSI</th>
+            <th>Registration</th>
+            <th>Stamp Duty</th>
+            <th>Society Duty</th>
+            <th>Total</th>
+            <th>Commission</th>
+            <th>Remaining</th>
+            <th>SRO Exp</th>
+            <th>Final</th>
+            <th>Submission</th>
+            <th>SFDC</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+let rowCount = 0;
+
+document.getElementById("dataForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    rowCount++;
+
+    const fields = [
+        "state","district","document","docNumber","docsPresentation",
+        "executerName","favorName","sroName","clientName","draftedExecuted",
+        "propertyAddress","considerationPrice","siCsi","registration",
+        "stampDuty","societyDuty","total","commission","remaining",
+        "sroExpenses","finalAmount","amountSubmission","sfdc"
+    ];
+
+    let row = `<tr><td>${rowCount}</td>`;
+    fields.forEach(id => {
+        row += `<td>${document.getElementById(id).value}</td>`;
+        document.getElementById(id).value = "";
+    });
+    row += "</tr>";
+
+    document.querySelector("#dataTable tbody").innerHTML += row;
+});
+
+function downloadExcel() {
+    let csv = [];
+    const rows = document.querySelectorAll("table tr");
+
+    for (let row of rows) {
+        let cols = row.querySelectorAll("th, td");
+        let data = [];
+        cols.forEach(col => data.push(`"${col.innerText}"`));
+        csv.push(data.join(","));
+    }
+
+    const blob = new Blob([csv.join("\n")], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "property_data.csv";
+    a.click();
+}
+</script>
+
+</body>
+</html>
